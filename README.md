@@ -28,8 +28,8 @@ $stack = new Pila\Stack($factory);
 Next, append whatever middleware we want to. In this case, let's add the error handler and the HSTS middleware:
 
 ```php
-$stack->append(new Pila\Middleware\ErrorHandler);
-$stack->append(new Pila\Middleware\HSTS(300 /* Max-age in seconds */));
+$stack->append(new Pila\ServerMiddleware\ErrorHandler);
+$stack->append(new Pila\ServerMiddleware\HSTS(300 /* Max-age in seconds */));
 ```
 
 We can also add middleware as closures:
@@ -53,7 +53,7 @@ $default = function($request) use ($factory) {
 Finally, we can run out stack:
 
 ```php
-$request = new Guzzle\Psr7\Request("http://www.example.com/foo", "GET");
+$request = new Guzzle\Psr7\ServerRequest("http://www.example.com/foo", "GET");
 $response = $stack->run($request, $default);
 ```
 
@@ -64,14 +64,14 @@ And that's all there is to it...
 To use this middleware as a library author, simply implement the `Pila\MiddlewareInterface` interface. It's as easy as that:
 
 ```php
-use Pila\MiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerMiddlewareInterface;
+use Pila\ServerFrameInterface;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class Foo implements MiddlewareInterface {
-    public function handle(RequestInterface $request, FrameInterface $frame): ResponseInterface {
+class Foo implements ServerMiddlewareInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         // Do your modifications to the request here
         $response = $frame->next($request);
         // Do your modifications to the response here
@@ -87,14 +87,14 @@ It's as simple as that.
 Sometimes, you don't want to continue with a request. If you detect that situation in your middleware, simply create a new response:
 
 ```php
-use Pila\MiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerMiddlewareInterface;
+use Pila\ServerFrameInterface;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class Foo implements MiddlewareInterface {
-    public function handle(RequestInterface $request, FrameInterface $frame): ResponseInterface {
+class Foo implements ServerMiddlewareInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         if ($this->isBadRequest($request)) {
             return $frame->factory()->createResponse("Bad Request", 400);
         }
@@ -105,7 +105,7 @@ class Foo implements MiddlewareInterface {
 
 # Interfaces
 
-Pila defines 3 consumable interfaces:
+Pila defines 3 consumable interfaces, and 2 variations of two of them:
 
 ## MiddlewareInterface
 
@@ -116,6 +116,30 @@ interface MiddlewareInterface {
 ```
 
 This is simple. The middleware gets a request, and returns a response. It can either create a new one from the factory inside the frame, or it can call the next middleware in the stack to return one.
+
+You should **VERY** rarely ever use this directly. Use one of the specializations:
+
+We also have a Server, and a Client specification:
+
+### ServerMiddlewareInterface
+
+```php
+interface ServerMiddlewareInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface;
+}
+```
+
+Used for Server request processing
+
+### ClientMiddlewareInterface
+
+```php
+interface ClientMiddlewareInterface {
+    public function handle(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface;
+}
+```
+
+This is used for HTTP clients.
 
 ## FrameInterface
 
@@ -128,7 +152,29 @@ interface FrameInterface {
 
 The `next()` method will call the next middleware in the stack. This is how requests get proccessed. The innermost handler should return a response, which then would be acted on by outers.
 
-The `factory()` method will return an instance of the next interface:
+The `factory()` method will return an instance of the factory.
+
+Two specializations are provided:
+
+### ServerFrameInterface
+
+```php
+interface ServerFrameInterface extends FrameInterface {
+    public function next(ServerRequestInterface $request): ResponseInterface;
+}
+```
+
+This is used for processing server requests
+
+### ClientFrameInterface
+
+```php
+interface ClientFrameInterface extends FrameInterface {
+    public function next(RequestInterface $request): ResponseInterface;
+}
+```
+
+Again, used for HTTP clients
 
 ## FactoryInterface
 

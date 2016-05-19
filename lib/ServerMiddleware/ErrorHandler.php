@@ -3,7 +3,7 @@
 namespace Pila\ServerMiddleware;
 
 use Pila\ServerMiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +16,7 @@ class ErrorHandler implements ServerMiddlewareInterface {
         $this->debug = $debug;
     }   
  
-    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         try {
             return $frame->next($request);
         } catch (\Throwable $exception) {

@@ -3,7 +3,7 @@
 namespace Pila\ServerMiddleware;
 
 use Pila\ServerMiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +18,7 @@ class HSTS implements ServerMiddlewareInterface {
         $this->includeSubdomains = $includeSubdomains;
     }
 
-    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         $uri = $request->getUri();
         if (strtolower($uri->getScheme()) !== 'https') {
             return $frame->factory()->createResponse(

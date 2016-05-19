@@ -50,7 +50,7 @@ class Stack {
     }
 
     public function run(ServerRequestInterface $request, callable $default): ResponseInterface {
-        return (new class($this->stack, $this->factory, $default) implements FrameInterface {
+        return (new class($this->stack, $this->factory, $default) implements ServerFrameInterface {
             private $stack;
             private $index = 0;
             private $factory;

@@ -3,14 +3,14 @@
 namespace Pila\ServerMiddleware;
 
 use Pila\ServerMiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GZip implements ServerMiddlewareInterface {
     
-    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         $response = $frame->next($request);
         if ($response->hasHeader("Content-Encoding") || !$this->isAcceptableServerRequest($request)) {
             // Do not double-encode

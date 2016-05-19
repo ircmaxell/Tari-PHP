@@ -3,7 +3,7 @@
 namespace Pila\ServerMiddleware;
 
 use Pila\ServerMiddlewareInterface;
-use Pila\FrameInterface;
+use Pila\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -15,7 +15,7 @@ class CallableServerMiddleware implements ServerMiddlewareInterface {
         $this->callback = $callback;
     }
     
-    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, ServerFrameInterface $frame): ResponseInterface {
         return ($this->callback)($request, $frame);
     }
 }
