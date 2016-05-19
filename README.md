@@ -32,6 +32,15 @@ $stack->append(new Pila\Middleware\ErrorHandler);
 $stack->append(new Pila\Middleware\HSTS(300 /* Max-age in seconds */);
 ```
 
+We can also add middleware as closures:
+
+```php
+$stack->append(function($request, $frame) {
+    $response = $frame->next($request);
+    return $response->withHeader('X-Powered-By', 'Pila-PHP');
+});
+```
+
 We also need a "default" action to take:
 
 ```php
