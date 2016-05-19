@@ -41,7 +41,7 @@ class Factory implements FactoryInterface {
     }
     
     public function createStream($data = null): StreamInterface {
-        return new Psr7\Stream($data);
+        return Psr7\stream_for($data);
     }
     
     public function createUri(string $uri = ''): UriInterface {
