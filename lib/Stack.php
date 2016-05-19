@@ -2,15 +2,17 @@
 
 namespace Pila;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+
 
 class Stack {
     protected $stack = [];
     protected $factory;
     
-    public function __construct(FactoryInterface $factory) {
+    public function __construct(FactoryInterface $factory, array $middleware = []) {
         $this->factory = $factory;
+        array_map([$this, 'append'], $middleware);
     }
     
     /**
@@ -21,10 +23,10 @@ class Stack {
      * @return void
      */
     public function append($middleware) {
-        if ($middleware instanceof MiddlewareInterface) {
+        if ($middleware instanceof MiddlewareInterface || $middleware instanceof ServerMiddlewareInterface) {
             $this->stack[] = $middleware;
         } elseif (is_callable($middleware)) {
-            $this->stack[] = new Middleware\CallableMiddleware($middleware);
+            $this->stack[] = new ServerMiddleware\CallableServerMiddleware($middleware);
         } else {
             throw new \InvalidArgumentException("Invalid Middleware Detected");
         }
@@ -38,16 +40,16 @@ class Stack {
      * @return void
      */
     public function prepend($middleware) {
-        if ($middleware instanceof MiddlewareInterface) {
+        if ($middleware instanceof MiddlewareInterface || $middleware instanceof ServerMiddlewareInterface) {
             array_unshift($this->stack, $middleware);
         } elseif (is_callable($middleware)) {
-            array_unshift($this->stack, new CallableMiddleware($middleware));
+            array_unshift($this->stack, new ServerMiddleware\CallableServerMiddleware($middleware));
         } else {
             throw new \InvalidArgumentException("Invalid Middleware Detected");
         }
     }
 
-    public function run(RequestInterface $request, callable $default): ResponseInterface {
+    public function run(ServerRequestInterface $request, callable $default): ResponseInterface {
         return (new class($this->stack, $this->factory, $default) implements FrameInterface {
             private $stack;
             private $index = 0;
@@ -58,7 +60,7 @@ class Stack {
                 $this->factory = $factory;
                 $this->default = $default;
             }
-            public function next(RequestInterface $request): ResponseInterface {
+            public function next(ServerRequestInterface $request): ResponseInterface {
                 if (!isset($this->stack[$this->index])) {
                     return ($this->default)($request);
                 }

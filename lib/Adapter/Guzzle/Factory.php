@@ -5,6 +5,7 @@ namespace Pila\Adapter\Guzzle;
 use Pila\FactoryInterface;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -17,8 +18,8 @@ class Factory implements FactoryInterface {
     public function createRequest(
         UriInterface $uri = null, 
         string $method = '',
-        $body = null, 
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): RequestInterface {
         return new Psr7\Request(
             $method,
@@ -27,11 +28,25 @@ class Factory implements FactoryInterface {
             $body
         );
     }
-    
+ 
+    public function createServerRequest(
+        UriInterface $uri = null, 
+        string $method = '',
+        array $headers = [],
+        $body = null
+    ): ServerRequestInterface {
+        return new Psr7\ServerRequest(
+            $method,
+            $uri,
+            $headers,
+            $body
+        );
+    }
+   
     public function createResponse(
-        $body = null,
         int $status = 200,
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): ResponseInterface {
         return new Psr7\Response(
             $status,

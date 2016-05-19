@@ -6,13 +6,13 @@ require "vendor/autoload.php";
 $stack = new Pila\Stack(new Pila\Adapter\Guzzle\Factory);
 
 // We append an error-handler
-$stack->append(new Pila\Middleware\ErrorHandler(true));
+$stack->append(new Pila\ServerMiddleware\ErrorHandler(true));
 
 // Append GZIP encoding
-$stack->append(new Pila\Middleware\GZip);
+$stack->append(new Pila\ServerMiddleware\GZip);
 
 // We append as early as possible a HSTS redirection
-$stack->append(new Pila\Middleware\HSTS(300));
+$stack->append(new Pila\ServerMiddleware\HSTS(300));
 
 // And we append a header adding in a callback
 $stack->append(function($request, $frame) {
@@ -22,7 +22,7 @@ $stack->append(function($request, $frame) {
 
 
 // Here's the test and debugging output
-$request = new GuzzleHttp\Psr7\Request('GET', 'http://example.com', []);
+$request = new GuzzleHttp\Psr7\ServerRequest('GET', 'http://example.com', []);
 
 $response = $stack->run($request, function($request) {
     return new GuzzleHttp\Psr7\Response(200, [], "Found");

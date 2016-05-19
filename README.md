@@ -138,14 +138,21 @@ interface FactoryInterface {
     public function createRequest(
         UriInterface $uri = null, 
         string $method = '',
-        $body = null, 
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): RequestInterface;
-    
+ 
+    public function createServerRequest(
+        UriInterface $uri = null, 
+        string $method = '',
+        array $headers = [],
+        $body = null
+    ): ServerRequestInterface;
+   
     public function createResponse(
-        $body = null,
         int $status = 200,
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): ResponseInterface;
     
     public function createStream($data = null): StreamInterface;

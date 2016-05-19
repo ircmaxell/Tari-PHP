@@ -1,18 +1,18 @@
 <?php
 
-namespace Pila\Middleware;
+namespace Pila\ServerMiddleware;
 
-use Pila\MiddlewareInterface;
+use Pila\ServerMiddlewareInterface;
 use Pila\FrameInterface;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class GZip implements MiddlewareInterface {
+class GZip implements ServerMiddlewareInterface {
     
-    public function handle(RequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
         $response = $frame->next($request);
-        if ($response->hasHeader("Content-Encoding") || !$this->isAcceptableRequest($request)) {
+        if ($response->hasHeader("Content-Encoding") || !$this->isAcceptableServerRequest($request)) {
             // Do not double-encode
             return $response;
         }
@@ -21,7 +21,7 @@ class GZip implements MiddlewareInterface {
         return $response->withBody($frame->factory()->createStream(gzcompress($stream)));
     }
 
-    private function isAcceptableRequest(RequestInterface $request): bool {
+    private function isAcceptableServerRequest(ServerRequestInterface $request): bool {
         if (!$request->hasHeader("Accept-encoding")) {
             return false;
         }

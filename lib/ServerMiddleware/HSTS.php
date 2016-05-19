@@ -1,14 +1,14 @@
 <?php
 
-namespace Pila\Middleware;
+namespace Pila\ServerMiddleware;
 
-use Pila\MiddlewareInterface;
+use Pila\ServerMiddlewareInterface;
 use Pila\FrameInterface;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HSTS implements MiddlewareInterface {
+class HSTS implements ServerMiddlewareInterface {
     
     private $maxAge = 0;
     private $includeSubdomains = false;
@@ -18,11 +18,10 @@ class HSTS implements MiddlewareInterface {
         $this->includeSubdomains = $includeSubdomains;
     }
 
-    public function handle(RequestInterface $request, FrameInterface $frame): ResponseInterface {
+    public function handle(ServerRequestInterface $request, FrameInterface $frame): ResponseInterface {
         $uri = $request->getUri();
         if (strtolower($uri->getScheme()) !== 'https') {
             return $frame->factory()->createResponse(
-                "HSTS Is Enabled",
                 301,
                 [
                     "Location" => $uri->withScheme('https'),

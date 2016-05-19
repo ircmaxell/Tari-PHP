@@ -3,6 +3,7 @@
 namespace Pila;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -18,31 +19,49 @@ interface FactoryInterface {
      *
      * @param UriInterface? $uri     The URI for the request
      * @param string        $method  The HTTTP Method for the request
-     * @param mixed         $body    The body for the request
      * @param array         $headers The parsed headers for the request
+     * @param mixed         $body    The body for the request
      *
      * @return Psr\Http\Message\RequestInterface The generated request
      */  
     public function createRequest(
         UriInterface $uri = null, 
         string $method = '',
-        $body = null, 
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): RequestInterface;
-    
+
+     /**
+     * Create a PSR-7 ServerRequest object
+     *
+     * @param UriInterface? $uri     The URI for the request
+     * @param string        $method  The HTTTP Method for the request
+     * @param array         $headers The parsed headers for the request
+     * @param mixed         $body    The body for the request
+     *
+     * @return Psr\Http\Message\ServerRequestInterface The generated request
+     */  
+    public function createServerRequest(
+        UriInterface $uri = null, 
+        string $method = '',
+        array $headers = [],
+        $body = null
+    ): ServerRequestInterface;
+
+   
     /**
      * Create a PSR-7 Response Object
      *
-     * @param mixed $body The body for the response
      * @param int   $status The HTTP status code for the response
      * @param array $headers The parsed headers for the response
+     * @param mixed $body The body for the response
      *
      * @return Psr\Http\Message\ResponseInterface The generated response
      */
     public function createResponse(
-        $body = null,
         int $status = 200,
-        array $headers = []
+        array $headers = [],
+        $body = null
     ): ResponseInterface;
     
     
