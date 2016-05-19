@@ -1,0 +1,22 @@
+{
+    "name": "ircmaxell/pila-php",
+    "description": "A Middleware Proof-Of-Concept Library For PHP",
+    "type": "library",
+    "require": {
+        "psr/http-message": "^1.0",
+        "guzzlehttp/psr7": "^1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anthony Ferrara",
+            "email": "ircmaxell@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Pila\\": "lib/"}
+    }
+}
