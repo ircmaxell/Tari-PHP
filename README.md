@@ -29,7 +29,7 @@ Next, append whatever middleware we want to. In this case, let's add the error h
 
 ```php
 $stack->append(new Pila\Middleware\ErrorHandler);
-$stack->append(new Pila\Middleware\HSTS(300 /* Max-age in seconds */);
+$stack->append(new Pila\Middleware\HSTS(300 /* Max-age in seconds */));
 ```
 
 We can also add middleware as closures:
