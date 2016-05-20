@@ -19,23 +19,23 @@ Now, we need a factory instance for the PSR-7 Library;
 $factory = new Pila\Adapter\Guzzle\Factory;
 ```
 
-Next, we boot up the "Stack":
+Next, we boot up the "Server":
 
 ```php
-$stack = new Pila\Stack($factory);
+$server = new Pila\Server($factory);
 ```
 
 Next, append whatever middleware we want to. In this case, let's add the error handler and the HSTS middleware:
 
 ```php
-$stack->append(new Pila\ServerMiddleware\ErrorHandler);
-$stack->append(new Pila\ServerMiddleware\HSTS(300 /* Max-age in seconds */));
+$server->append(new Pila\ServerMiddleware\ErrorHandler);
+$server->append(new Pila\ServerMiddleware\HSTS(300 /* Max-age in seconds */));
 ```
 
-We can also add middleware as closures:
+We can also add middleware as closures (Notice we don't need types):
 
 ```php
-$stack->append(function($request, $frame) {
+$server->append(function($request, $frame) {
     $response = $frame->next($request);
     return $response->withHeader('X-Powered-By', 'Pila-PHP');
 });
@@ -54,12 +54,12 @@ Finally, we can run out stack:
 
 ```php
 $request = new Guzzle\Psr7\ServerRequest("http://www.example.com/foo", "GET");
-$response = $stack->run($request, $default);
+$response = $server->run($request, $default);
 ```
 
 And that's all there is to it...
 
-# Usage As A Library Builder
+# Usage As A Library Builder (Server Mode)
 
 To use this middleware as a library author, simply implement the `Pila\MiddlewareInterface` interface. It's as easy as that:
 
@@ -105,23 +105,9 @@ class Foo implements ServerMiddlewareInterface {
 
 # Interfaces
 
-Pila defines 3 consumable interfaces, and 2 variations of two of them:
+Pila defines 5 consumable interfaces:
 
-## MiddlewareInterface
-
-```php
-interface MiddlewareInterface {
-    public function handle(RequestInterface $request, FrameInterface $frame): ResponseInterface;
-}
-```
-
-This is simple. The middleware gets a request, and returns a response. It can either create a new one from the factory inside the frame, or it can call the next middleware in the stack to return one.
-
-You should **VERY** rarely ever use this directly. Use one of the specializations:
-
-We also have a Server, and a Client specification:
-
-### ServerMiddlewareInterface
+## ServerMiddlewareInterface
 
 ```php
 interface ServerMiddlewareInterface {
@@ -131,32 +117,17 @@ interface ServerMiddlewareInterface {
 
 Used for Server request processing
 
-### ClientMiddlewareInterface
+## ClientMiddlewareInterface
 
 ```php
 interface ClientMiddlewareInterface {
-    public function handle(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface;
+    public function execute(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface;
 }
 ```
 
 This is used for HTTP clients.
 
-## FrameInterface
-
-```php
-interface FrameInterface {
-    public function next(RequestInterface $request): ResponseInterface;
-    public function factory(): FactoryInterface;
-}
-```
-
-The `next()` method will call the next middleware in the stack. This is how requests get proccessed. The innermost handler should return a response, which then would be acted on by outers.
-
-The `factory()` method will return an instance of the factory.
-
-Two specializations are provided:
-
-### ServerFrameInterface
+## ServerFrameInterface
 
 ```php
 interface ServerFrameInterface extends FrameInterface {
@@ -166,7 +137,7 @@ interface ServerFrameInterface extends FrameInterface {
 
 This is used for processing server requests
 
-### ClientFrameInterface
+## ClientFrameInterface
 
 ```php
 interface ClientFrameInterface extends FrameInterface {

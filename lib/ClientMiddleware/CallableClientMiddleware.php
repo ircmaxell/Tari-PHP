@@ -15,7 +15,7 @@ class CallableMiddleware implements ClientMiddlewareInterface {
         $this->callback = $callback;
     }
     
-    public function handle(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface {
+    public function execute(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface {
         return ($this->callback)($request, $frame);
     }
 }
