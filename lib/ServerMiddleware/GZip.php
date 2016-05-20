@@ -1,9 +1,9 @@
 <?php
 
-namespace Pila\ServerMiddleware;
+namespace Tari\ServerMiddleware;
 
-use Pila\ServerMiddlewareInterface;
-use Pila\ServerFrameInterface;
+use Tari\ServerMiddlewareInterface;
+use Tari\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;

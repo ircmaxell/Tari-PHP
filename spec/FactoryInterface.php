@@ -1,6 +1,6 @@
 <?php
 
-namespace Pila;
+namespace Tari;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;

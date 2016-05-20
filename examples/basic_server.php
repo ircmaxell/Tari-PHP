@@ -3,21 +3,21 @@
 require __DIR__ . "/../vendor/autoload.php";
 
 // We're using Guzzle's version
-$server = new Pila\Server(new Pila\Adapter\Guzzle\Factory);
+$server = new Tari\Server(new Tari\Adapter\Guzzle\Factory);
 
 // We append an error-handler
-$server->append(new Pila\ServerMiddleware\ErrorHandler(true));
+$server->append(new Tari\ServerMiddleware\ErrorHandler(true));
 
 // Append GZIP encoding
-$server->append(new Pila\ServerMiddleware\GZip);
+$server->append(new Tari\ServerMiddleware\GZip);
 
 // We append as early as possible a HSTS redirection
-$server->append(new Pila\ServerMiddleware\HSTS(300));
+$server->append(new Tari\ServerMiddleware\HSTS(300));
 
 // And we append a header adding in a callback
 $server->append(function($request, $frame) {
     $response = $frame->next($request);
-    return $response->withHeader("X-Powered-By", "Pila");
+    return $response->withHeader("X-Powered-By", "Tari");
 });
 
 

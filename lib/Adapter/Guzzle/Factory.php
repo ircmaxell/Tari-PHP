@@ -1,8 +1,8 @@
 <?php
 
-namespace Pila\Adapter\Guzzle;
+namespace Tari\Adapter\Guzzle;
 
-use Pila\FactoryInterface;
+use Tari\FactoryInterface;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;

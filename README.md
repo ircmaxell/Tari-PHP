@@ -1,4 +1,4 @@
-Pila-PHP
+Tari-PHP
 ========
 A PSR-7 Middleware Interface proof-of-concept for PHP.
 
@@ -16,20 +16,20 @@ First, install it: `composer require guzzle/psr7`
 Now, we need a factory instance for the PSR-7 Library;
 
 ```php
-$factory = new Pila\Adapter\Guzzle\Factory;
+$factory = new Tari\Adapter\Guzzle\Factory;
 ```
 
 Next, we boot up the "Server":
 
 ```php
-$server = new Pila\Server($factory);
+$server = new Tari\Server($factory);
 ```
 
 Next, append whatever middleware we want to. In this case, let's add the error handler and the HSTS middleware:
 
 ```php
-$server->append(new Pila\ServerMiddleware\ErrorHandler);
-$server->append(new Pila\ServerMiddleware\HSTS(300 /* Max-age in seconds */));
+$server->append(new Tari\ServerMiddleware\ErrorHandler);
+$server->append(new Tari\ServerMiddleware\HSTS(300 /* Max-age in seconds */));
 ```
 
 We can also add middleware as closures (Notice we don't need types):
@@ -37,7 +37,7 @@ We can also add middleware as closures (Notice we don't need types):
 ```php
 $server->append(function($request, $frame) {
     $response = $frame->next($request);
-    return $response->withHeader('X-Powered-By', 'Pila-PHP');
+    return $response->withHeader('X-Powered-By', 'Tari-PHP');
 });
 ```
 
@@ -61,11 +61,11 @@ And that's all there is to it...
 
 # Usage As A Library Builder (Server Mode)
 
-To use this middleware as a library author, simply implement the `Pila\MiddlewareInterface` interface. It's as easy as that:
+To use this middleware as a library author, simply implement the `Tari\MiddlewareInterface` interface. It's as easy as that:
 
 ```php
-use Pila\ServerMiddlewareInterface;
-use Pila\ServerFrameInterface;
+use Tari\ServerMiddlewareInterface;
+use Tari\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -87,8 +87,8 @@ It's as simple as that.
 Sometimes, you don't want to continue with a request. If you detect that situation in your middleware, simply create a new response:
 
 ```php
-use Pila\ServerMiddlewareInterface;
-use Pila\ServerFrameInterface;
+use Tari\ServerMiddlewareInterface;
+use Tari\ServerFrameInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -105,7 +105,7 @@ class Foo implements ServerMiddlewareInterface {
 
 # Interfaces
 
-Pila defines 3 consumable interfaces:
+Tari defines 3 consumable interfaces:
 
 ## ServerMiddlewareInterface
 
