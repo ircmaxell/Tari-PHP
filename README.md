@@ -105,7 +105,7 @@ class Foo implements ServerMiddlewareInterface {
 
 # Interfaces
 
-Pila defines 5 consumable interfaces:
+Pila defines 3 consumable interfaces:
 
 ## ServerMiddlewareInterface
 
@@ -117,16 +117,6 @@ interface ServerMiddlewareInterface {
 
 Used for Server request processing
 
-## ClientMiddlewareInterface
-
-```php
-interface ClientMiddlewareInterface {
-    public function execute(RequestInterface $request, ClientFrameInterface $frame): ResponseInterface;
-}
-```
-
-This is used for HTTP clients.
-
 ## ServerFrameInterface
 
 ```php
@@ -137,17 +127,6 @@ interface ServerFrameInterface {
 ```
 
 This is used for processing server requests
-
-## ClientFrameInterface
-
-```php
-interface ClientFrameInterface {
-    public function next(RequestInterface $request): ResponseInterface;
-    public function factory(): FactoryInterface;
-}
-```
-
-Again, used for HTTP clients
 
 ## FactoryInterface
 
