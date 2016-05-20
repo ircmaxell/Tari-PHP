@@ -130,8 +130,9 @@ This is used for HTTP clients.
 ## ServerFrameInterface
 
 ```php
-interface ServerFrameInterface extends FrameInterface {
+interface ServerFrameInterface {
     public function next(ServerRequestInterface $request): ResponseInterface;
+    public function factory(): FactoryInterface;
 }
 ```
 
@@ -140,8 +141,9 @@ This is used for processing server requests
 ## ClientFrameInterface
 
 ```php
-interface ClientFrameInterface extends FrameInterface {
+interface ClientFrameInterface {
     public function next(RequestInterface $request): ResponseInterface;
+    public function factory(): FactoryInterface;
 }
 ```
 
