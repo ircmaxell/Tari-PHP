@@ -30,6 +30,6 @@ class HSTS implements ServerMiddlewareInterface {
         }
         $response = $frame->next($request);
         $suffix = $this->includeSubdomains ? ';includeSubDomains' : '';
-        return $response->withHeader("Strict-Transport-Security", "max-age=" . $this->maxAge . ";" . $suffix); 
+        return $response->withHeader("Strict-Transport-Security", "max-age=" . $this->maxAge . $suffix); 
     }
 }
