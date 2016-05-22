@@ -5,15 +5,15 @@ A PSR-7 Middleware Interface proof-of-concept for PHP.
 # Requirements
  * PHP 7.0
  
-Yes, that's the only hard requirement
+Yes, that's the only hard requirement.
 
-# Usage As An End User
+# Usage as an End User
 
 To use this runner, you need to pick a PSR-7 Library. We'll use Guzzle's.
 
 First, install it: `composer require guzzle/psr7`
 
-Now, we need a factory instance for the PSR-7 Library;
+Now, we need a factory instance for the PSR-7 Library:
 
 ```php
 $factory = new Tari\Adapter\Guzzle\Factory;
@@ -50,7 +50,7 @@ $default = function($request) use ($factory) {
 };
 ```
 
-Finally, we can run out stack:
+Finally, we can run our stack:
 
 ```php
 $request = new Guzzle\Psr7\ServerRequest("http://www.example.com/foo", "GET");
@@ -59,9 +59,9 @@ $response = $server->run($request, $default);
 
 And that's all there is to it...
 
-# Usage As A Library Builder (Server Mode)
+# Usage as a Library Builder (Server Mode)
 
-To use this middleware as a library author, simply implement the `Tari\MiddlewareInterface` interface. It's as easy as that:
+To use this middleware as a library author, simply implement the `Tari\MiddlewareInterface` interface.
 
 ```php
 use Tari\ServerMiddlewareInterface;
@@ -82,7 +82,7 @@ class Foo implements ServerMiddlewareInterface {
 
 It's as simple as that.
 
-## Aborting a request
+## Aborting a Request
 
 Sometimes, you don't want to continue with a request. If you detect that situation in your middleware, simply create a new response:
 
@@ -105,7 +105,7 @@ class Foo implements ServerMiddlewareInterface {
 
 # Interfaces
 
-Tari defines 3 consumable interfaces:
+Tari defines three consumable interfaces:
 
 ## ServerMiddlewareInterface
 
@@ -115,7 +115,7 @@ interface ServerMiddlewareInterface {
 }
 ```
 
-Used for Server request processing
+Used for server request processing.
 
 ## ServerFrameInterface
 
@@ -126,7 +126,7 @@ interface ServerFrameInterface {
 }
 ```
 
-This is used for processing server requests
+Used for processing server requests.
 
 ## FactoryInterface
 
